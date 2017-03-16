@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>轮播图</title>
+	<style type="text/css">
+		*{
+			margin:0;
+			padding:0;
+			text-decoration: none;
+		}
+		#wrap{
+			width:600px;
+			height:400px;
+			border:3px solid #333;
+			overflow:hidden;
+			position:absolute;
+			top:20%;
+			left:30%;
+		}
+		#list{
+			width:4200px;
+			height:400px;
+			position: absolute;
+			z-index:1;
+		}
+		#list img{
+			float:left;
+		}
+		#buttons{
+			position: absolute;
+			height:10px;
+			width:100px;
+			left:250px;
+			bottom:20px;
+			z-index:2;
+		}
+		#buttons span{
+			cursor: pointer;
+			float:left;
+			width:10px;
+			height:10px;
+			border:1px solid #fff;
+			border-radius: 50%;
+			background: #333;
+			margin-right:5px;
+		}
+		#buttons .on{
+			background: orangered;
+		}
+		.arrow{
+			cursor: pointer;
+			display:none;
+			position: absolute;
+			font-size:36px;
+			line-height: 39px;
+			text-align:center;
+			font-weight: bold;
+			width:40px;
+			height: 40px;
+			z-index: 2;
+			top:180px;
+			background:rgba(0,0,0,.3);
+			color:#fff;
+		}
+		.arrow:hover{
+			background:rgba(0,0,0,0.7);
+		}
+		#wrap:hover .arrow{display: block;}
+		#prew{left:20px;}
+		#next{right:20px;}
+		.alink{
+			margin:50px auto;
+			text-align: center;
+		}
+		.nav{
+		    padding: 10px;
+		    text-align: center;
+		}
+		.nav a{
+		    color: #000;
+		    font-weight: bold;
+		    font-size: 16px;
+		    /* text-decoration: none; */
+		}
+	</style>
+</head>
+<body>
+	<div class="nav">
+		<a href="www.xinglong12138.info/parctise/demo3/index.html">下一个</a>
+	</div>
+	<div id="wrap">
+		<div id="list" style="left:-600px;">
+			<img src="img/5.jpg" alt="">
+			<img src="img/1.jpg" alt="">
+			<img src="img/2.jpg" alt="">
+			<img src="img/3.jpg" alt="">
+			<img src="img/4.jpg" alt="">
+			<img src="img/5.jpg" alt="">
+			<img src="img/1.jpg" alt="">
+		</div>
+		<div id="buttons">
+			<span index="1" class="on"></span>
+			<span index="2" ></span>
+			<span index="3" ></span>
+			<span index="4" ></span>
+			<span index="5" ></span>
+		</div>
+		<a href="#" id="prew" class="arrow">&lt;</a>
+		<a href="#" id="next" class="arrow">&gt;</a>
+	</div>
+	<script type="text/javascript">
+		window.onload = function(){
+			var list = document.getElementById('list');
+			var prew = document.getElementById('prew');
+			var next = document.getElementById('next'); 
+			var buttons = document.getElementById('buttons').getElementsByTagName('span');
+			var wrap = document.getElementById('wrap');
+			var index = 1;
+			var flag = false;
+			var timer = 0;
+			prew.onclick = function(){
+				if(!flag){
+					index -=1;
+					showButton();
+					getMove(600);
+				}
+			}
+			next.onclick = function(){
+				if(!flag){
+					index +=1;
+					showButton();
+					getMove(-600);
+				}
+			}
+
+			wrap.onmouseover = stop;
+
+			wrap.onmouseout = play;
+
+			play();
+
+			for(var i = 0;i<buttons.length;i++){
+				buttons[i].onclick = function(){
+					if(this.className =='on'){
+						return;
+					}
+					var myIndex = parseInt(this.getAttribute('index'));
+					var offset = -600*(myIndex-index);
+					if(!flag){
+						index = myIndex;
+						showButton();
+						getMove(offset);
+					}
+				}
+			}
+			
+			function play(){
+				timer = setInterval(function(){
+					next.onclick();
+				},1000);
+			}
+
+			function stop(){
+				clearInterval(timer);
+			}
+
+			function showButton(){
+				for(var i = 0;i<buttons.length;i++){
+					buttons[i].className = '';
+				}
+				if(index>5){
+					index = 1;
+				}else{
+					if(index<=0){
+						index = 5;
+					}
+				}
+				buttons[index-1].className = 'on';
+			}
+
+			function getMove(speed){
+				flag = true;
+				var newLeft = parseInt(getStyle(list,'left'))+speed;
+				var timer = 300;
+				var interval = 1;
+				var speed = speed/(timer/interval);
+				function go(){
+					if(speed<0&&parseInt(getStyle(list,'left'))>newLeft||speed>0&&parseInt(getStyle(list,'left'))<newLeft){
+						list.style.left =parseInt(getStyle(list,'left'))+speed+'px';
+						setTimeout(go,interval);
+					}else{
+						list.style.left = newLeft+'px';
+						if(newLeft>-600){
+							list.style.left = -3000+'px';
+						}else{	
+							if(newLeft<-3000){
+								list.style.left = -600+'px';
+							}
+						flag = false;
+					}
+				}
+				}
+				go();
+				
+			}
+			function getStyle(obj,attr){
+				if(obj.currentStyler){
+					return obj.currentStyle[attr];
+				}else{
+					return getComputedStyle(obj,null)[attr];
+				}
+			}
+		}	
+	</script>
+</body>
+</html>

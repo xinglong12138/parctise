@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>小球运动</title>
+	<style>
+		.nav{
+		    padding: 10px;
+		    text-align: center;
+		}
+		.nav a{
+		    color: #000;
+		    font-weight: bold;
+		    font-size: 16px;
+		    /* text-decoration: none; */
+		}
+	</style>
+</head>
+<body>
+	<div class="nav">
+		<a href="www.xinglong12138.info/parctise/demo4/hw.html">下一个</a>
+	</div>
+	<canvas id="canvas" style="border:1px solid #aaa;display: block;margin:50px auto;">
+	</canvas>
+	<script>
+		var ball ={
+			x:412,
+			y:100,
+			r:10,
+			g:2,
+			vx:-4,
+			vy:-5,
+			color:'#058'
+		}
+		window.onload = function(){
+			var canvas = document.getElementById('canvas');
+			var context = canvas.getContext('2d');
+			canvas.height = 600;
+			canvas.width = 600;
+			setInterval(function(){
+				render(context);
+				update();
+			},50);
+		}
+		function render(cxt){
+			cxt.clearRect(0,0,cxt.canvas.width,cxt.canvas.height);
+			cxt.fillStyle = 'ball.color';
+			cxt.beginPath();
+			cxt.arc(ball.x,ball.y,ball.r,0,2*Math.PI);
+			cxt.closePath();
+			cxt.fill();
+		}
+		function update(){
+			ball.x+=ball.vx;
+			ball.y+=ball.vy;
+			ball.vy+=ball.g;
+			if(ball.y>600-ball.r){
+				ball.y = 600-ball.r;
+				ball.vy = -ball.vy*0.9;
+			}
+			if(ball.y<=0+ball.r){
+				ball.y=0+ball.r;
+				ball.vy = -ball.vy*0.9;
+			}
+			if(ball.x <=0+ball.r){
+				ball.x = ball.x+ball.r;
+				ball.vx = -ball.vx*0.9;
+			}
+			if(ball.x >= 600-ball.r){
+				ball.x = ball.x -ball.r;
+				ball.vx = -ball.vx*0.9;
+			}
+		}
+	</script>
+</body>
+</html>
